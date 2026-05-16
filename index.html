@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexoTech | Gestión de Préstamos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- ORBES DECORATIVAS -->
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <!-- ════════════════════════════════════════
+       PANTALLA AUTH (LOGIN/REGISTRO)
+  ════════════════════════════════════════ -->
+  <div id="screen-auth">
+    <div class="screen-auth">
+      <div class="auth-box">
+        <div class="auth-logo">NT</div>
+        <div class="auth-title">NexoTech</div>
+        <div class="auth-sub">Gestión segura de préstamos</div>
+
+        <div class="auth-tabs">
+          <button class="tab-btn active" id="tab-login" onclick="mostrarTab('login')">Iniciar sesión</button>
+          <button class="tab-btn" id="tab-register" onclick="mostrarTab('register')">Registrarse</button>
+        </div>
+
+        <!-- FORM LOGIN -->
+        <form id="form-login" class="auth-form" onsubmit="hacerLogin(event)">
+          <div>
+            <input type="text" id="login-rut" placeholder="📋 RUT (12345678-K)" required class="input-auth">
+            <span class="err-msg" id="login-rut-err"></span>
+          </div>
+          <div class="pass-wrap">
+            <input type="password" id="login-pass" placeholder="🔒 Contraseña" required class="input-auth">
+            <button type="button" class="eye-btn" onclick="togglePass('login-pass', this)">👁</button>
+            <span class="err-msg" id="login-pass-err"></span>
+          </div>
+          <span class="err-msg center" id="login-general-err"></span>
+          <button type="submit" class="btn-main full">Ingresar</button>
+          <div class="auth-switch">
+            ¿No tienes cuenta? <a onclick="mostrarTab('register')">Registrate aquí</a>
+          </div>
+        </form>
+
+        <!-- FORM REGISTRO -->
+        <form id="form-register" class="auth-form hidden" onsubmit="hacerRegistro(event)">
+          <div>
+            <input type="text" id="reg-nombre" placeholder="👤 Nombre completo" required class="input-auth">
+            <span class="err-msg" id="reg-nombre-err"></span>
+          </div>
+          <div>
+            <input type="text" id="reg-rut" placeholder="📋 RUT (12345678-K)" required class="input-auth">
+            <span class="err-msg" id="reg-rut-err"></span>
+          </div>
+          <div class="pass-wrap">
+            <input type="password" id="reg-pass" placeholder="🔒 Contraseña (mín. 6)" required class="input-auth">
+            <button type="button" class="eye-btn" onclick="togglePass('reg-pass', this)">👁</button>
+            <span class="err-msg" id="reg-pass-err"></span>
+          </div>
+          <div class="pass-wrap">
+            <input type="password" id="reg-pass2" placeholder="🔒 Confirmar contraseña" required class="input-auth">
+            <button type="button" class="eye-btn" onclick="togglePass('reg-pass2', this)">👁</button>
+            <span class="err-msg" id="reg-pass2-err"></span>
+          </div>
+          <span class="err-msg center" id="reg-general-err"></span>
+          <button type="submit" class="btn-main full">Crear cuenta</button>
+          <div class="auth-switch">
+            ¿Ya tienes cuenta? <a onclick="mostrarTab('login')">Inicia sesión aquí</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PANTALLA APP
+  ════════════════════════════════════════ -->
+  <div id="screen-app" class="hidden">
+    <div class="screen-app">
+      <div class="wrapper">
+        <!-- HEADER -->
+        <header>
+          <div class="logo-badge">NT</div>
+          <div class="header-text">
+            <h1>NexoTech</h1>
+            <p>Control de préstamos de equipos</p>
+          </div>
+          <div class="header-right">
+            <div class="user-chip">
+              <div class="user-avatar" id="user-avatar">-</div>
+              <span id="user-nombre-chip">Usuario</span>
+            </div>
+            <button class="btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+          </div>
+        </header>
+
+        <h2 id="bienvenida" class="bienvenida">Bienvenido/a 👋</h2>
+
+        <!-- GRID DE CONTADORES -->
+        <div class="counters-grid">
+          <div class="counter">
+            <span class="counter-label">Préstamos activos</span>
+            <span class="counter-value" id="count-active">0</span>
+          </div>
+          <div class="counter">
+            <span class="counter-label">Equipos disponibles</span>
+            <span class="counter-value" id="count-disponible">0</span>
+          </div>
+          <div class="counter">
+            <span class="counter-label">Total en inventario</span>
+            <span class="counter-value" id="count-total">0</span>
+          </div>
+          <div class="counter">
+            <span class="counter-label">Equipos prestados</span>
+            <span class="counter-value" id="count-prestados">0</span>
+          </div>
+        </div>
+
+        <!-- SECCIONES PRINCIPALES -->
+        <div class="main-grid">
+          <!-- COLUMNA IZQUIERDA -->
+          <div class="left-col">
+            <!-- FORMULARIO -->
+            <div class="card">
+              <div class="card-header">
+                <span>➕ Nuevo préstamo</span>
+              </div>
+              <form id="loan-form" class="form-loans">
+                <div class="form-group">
+                  <label>RUT del usuario</label>
+                  <input type="text" id="rut" placeholder="12345678-K" class="input-main">
+                  <span class="err-msg" id="rut-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label>Selecciona un equipo</label>
+                  <select id="equipo" class="input-main">
+                    <option value="">Seleccione un equipo...</option>
+                  </select>
+                  <span class="err-msg" id="equipo-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label>Fecha de devolución esperada</label>
+                  <input type="date" id="fecha" class="input-main">
+                  <span class="err-msg" id="fecha-error"></span>
+                </div>
+
+                <div class="form-buttons">
+                  <button type="submit" class="btn-main">Registrar préstamo</button>
+                  <button type="button" id="btn-clear" class="btn-secondary">Limpiar</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- INVENTARIO -->
+            <div class="card">
+              <div class="card-header">
+                <span>📦 Estado del inventario</span>
+              </div>
+              <div id="inventario-grid" class="inventario-grid"></div>
+            </div>
+          </div>
+
+          <!-- COLUMNA DERECHA -->
+          <div class="right-col">
+            <!-- TABLA PRESTAMOS -->
+            <div class="card">
+              <div class="card-header">
+                <span>📋 Préstamos registrados <span class="badge" id="badge-count">0</span></span>
+              </div>
+
+              <div class="search-box">
+                <input type="text" id="search-input" placeholder="🔍 Buscar por RUT, equipo o usuario..." class="input-search" oninput="filtrarTabla()">
+              </div>
+
+              <!-- ACCORDION -->
+              <div class="accordion">
+                <button class="accordion-header" onclick="toggleAccordion()">
+                  <span>Expandir tabla</span>
+                  <span id="accordion-arrow">▼</span>
+                </button>
+                <div id="accordion-body" class="accordion-body">
+                  <table class="loan-table">
+                    <thead>
+                      <tr>
+                        <th>RUT</th>
+                        <th>Equipo</th>
+                        <th>Fecha entrega</th>
+                        <th>Registrado por</th>
+                        <th>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody id="loan-list">
+                      <tr><td colspan="5"><div class="empty"><div class="icon">🗂️</div><p>Sin préstamos registrados aún</p></div></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
